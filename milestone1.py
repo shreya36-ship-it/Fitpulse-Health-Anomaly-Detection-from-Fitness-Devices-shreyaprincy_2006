@@ -4,264 +4,263 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# ==================================================
-# PAGE CONFIG
-# ==================================================
-st.set_page_con
-g(
 
-page_title="Fitness Health Data — Pro Pipeline",
-layout="wide",
-page_icon="💙"
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+
+
+
+# -------------------------------------------------------
+# PAGE CONFIG (ONLY ONCE)
+# -------------------------------------------------------
+
+st.set_page_config(
+    page_title="FitPulse ML Dashboard",
+    page_icon="💓",
+    layout="wide"
 )
+# -------------------------------------------------------
+# SIDEBAR MILESTONE SELECTOR
+# -------------------------------------------------------
 
-# ==================================================
-# SESSION STATE
-# ==================================================
-if "theme" not in st.session_state:
-st.session_state.theme = "dark"
+st.sidebar.title("💓 FitPulse Dashboard")
 
-if "df" not in st.session_state:
-st.session_state.df = None
+st.sidebar.markdown("---")
 
-if "cleaned_df" not in st.session_state:
-st.session_state.cleaned_df = None
 
-# ==================================================
-# THEME TOGGLE FUNCTION
-# ==================================================
-def toggle_theme():
-st.session_state.theme = (
-"light" if st.session_state.theme == "dark" else "dark"
+# -------------------------------------------------------
+# GLOBAL DARK CORPORATE UI
+# -------------------------------------------------------
 
-)
-
-# ==================================================
-# THEME COLORS
-# ==================================================
-if st.session_state.theme == "dark":
-main_bg = "#0a0f1c"
-right_bg = "#111827"
-text_color = "white"
-else:
-main_bg = "#f5f7fb"
-right_bg = "#dbeafe"
-text_color = "black"
-
-# ==================================================
-# APPLY CSS
-# ==================================================
-st.markdown(f"""
+st.markdown("""
 <style>
-.stApp {{
-background-color: {main_bg};
-color: {text_color};
-}}
-.right-panel {{
-background-color: {right_bg};
-padding: 20px;
-border-radius: 12px;
-height: 100%;
-}}
-.pipeline-step {{
-padding: 12px;
-margin-bottom: 10px;
-border-radius: 8px;
 
-background-color: rgba(255,255,255,0.05);
-}}
-h1, h2, h3 {{
-color: #1f77
-;
+.stApp{
+background: linear-gradient(135deg,#0f172a,#020617);
+color:white;
+}
 
-}}
-.stButton>button {{
-background: linear-gradient(90deg,#1f77
+/* Sidebar */
 
-,#004aad);
+[data-testid="stSidebar"]{
+background:#020617;
+}
 
-color: white;
-border-radius: 8px;
-font-weight: bold;
-}}
+[data-testid="stSidebar"] *{
+color:white !important;
+}
+
+/* Buttons */
+
+button{
+background:#2563eb !important;
+color:white !important;
+border-radius:8px;
+}
+
+/* Headers */
+
+h1,h2,h3{
+color:#60a5fa;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
-# ==================================================
-# LAYOUT
-# ==================================================
-main_col, right_col = st.columns([4, 1])
 
-# ==================================================
-# RIGHT SIDE PANEL
-# ==================================================
-with right_col:
-st.markdown("<div class='right-panel'>", unsafe_allow_html=True)
 
-st.button("🌗 Toggle Dark / Light", on_click=toggle_theme)
+# -------------------------------------------------------
+# SIDEBAR
+# -------------------------------------------------------
 
-st.markdown("###🚀 Pipeline Status")
+# -------------------------------------------------------
+# SIDEBAR EXECUTED FEATURES
+# -------------------------------------------------------
 
-def status_icon(condition):
-return "✅" if condition else "⏳"
+st.sidebar.markdown("---")
 
-st.markdown(
+st.sidebar.subheader("⚙️ Pipeline Features")
 
-f"<div class='pipeline-step'>{status_icon(st.session_state.df is not None)}
-📂 Upload</div>",
-unsafe_allow_html=True
-)
-st.markdown(
-f"<div class='pipeline-step'>{status_icon(st.session_state.df is not None)}
-🔍 Null Check</div>",
-unsafe_allow_html=True
-)
-st.markdown(
-f"<div class='pipeline-step'>{status_icon(st.session_state.cleaned_df is not
-None)} ⚙ Preprocess</div>",
-unsafe_allow_html=True
-)
-st.markdown(
-f"<div class='pipeline-step'>{status_icon(st.session_state.cleaned_df is not
-None)} 👁 Preview</div>",
-unsafe_allow_html=True
-)
-st.markdown(
-f"<div class='pipeline-step'>{status_icon(st.session_state.cleaned_df is not
-None)} 📊 EDA</div>",
-unsafe_allow_html=True
-)
+st.sidebar.write("📂 **Data Upload**")
+st.sidebar.caption("Upload Fitbit and health datasets for analysis")
 
-st.markdown("</div>", unsafe_allow_html=True)
+st.sidebar.write("🔍 **Missing Value Analysis**")
+st.sidebar.caption("Detect null values and visualize missing data %")
 
-# ==================================================
-# MAIN CONTENT
-# ==================================================
-with main_col:
+st.sidebar.write("🧹 **Data Preprocessing**")
+st.sidebar.caption("Interpolation, forward fill and cleaning of records")
 
-st.title("💙 Fitness Health Data — Pro Pipeline")
+st.sidebar.write("👀 **Clean Data Preview**")
+st.sidebar.caption("View processed dataset after preprocessing")
 
-# ---------------- STEP 1 ----------------
-st.header("📂 Step 1 · Upload Dataset")
-uploaded_
-le = st.
+st.sidebar.write("📊 **Exploratory Data Analysis**")
+st.sidebar.caption("Distribution plots for health metrics")
 
-le_uploader("Upload CSV File", type=["csv"])
+st.sidebar.write("❤️ **Heart Rate Processing**")
+st.sidebar.caption("Resampling second-level HR data to minute level")
 
-if uploaded_
-le:
+st.sidebar.write("🔬 **TSFresh Feature Engineering**")
+st.sidebar.caption("Automatic time-series feature extraction")
 
-df = pd.read_csv(uploaded_
-le)
+st.sidebar.write("🔥 **Feature Heatmap Visualization**")
+st.sidebar.caption("Normalized feature matrix heatmap")
 
-st.session_state.df = df
+st.sidebar.write("📈 **Heart Rate Forecasting**")
+st.sidebar.caption("Future HR prediction using Prophet")
 
-rows, cols = df.shape
-total_nulls = df.isnull().sum().sum()
+st.sidebar.write("🤖 **User Clustering**")
+st.sidebar.caption("KMeans clustering based on activity metrics")
 
-c1, c2, c3 = st.columns(3)
-c1.metric("Rows", rows)
-c2.metric("Columns", cols)
-c3.metric("Total Nulls", total_nulls)
+st.sidebar.write("📉 **PCA Visualization**")
+st.sidebar.caption("2D dimensionality reduction of clusters")
 
-st.success("Dataset Loaded Successfully!")
+st.sidebar.write("🧠 **t-SNE Projection**")
+st.sidebar.caption("Advanced visualization of user clusters")
 
-# ---------------- STEP 2 ----------------
-if st.session_state.df is not None:
-st.header("🔍 Step 2 · Check Null Values")
+st.sidebar.markdown("---")
 
-df = st.session_state.df
-null_counts = df.isnull().sum()
-st.dataframe(null_counts)
+st.sidebar.success("🚀 ML Pipeline Active")
 
-# NULL PERCENTAGE GRAPH
-st.subheader("📊 Missing Data Percentage")
 
-null_percent = (null_counts / len(df)) * 100
+# =====================================================
+# MILESTONE 1 FUNCTION
+# =====================================================
 
-plt.
-gure(
-gsize=(8,4))
+def milestone1():
 
-null_percent.sort_values(ascending=False).plot(kind="bar")
-plt.ylabel("Missing Percentage (%)")
-plt.xticks(rotation=45)
-st.pyplot(plt)
+    if "df" not in st.session_state:
+        st.session_state.df = None
 
-# ---------------- STEP 3 ----------------
-if st.session_state.df is not None:
-st.header("⚙ Step 3 · Preprocess Data")
+    if "cleaned_df" not in st.session_state:
+        st.session_state.cleaned_df = None
 
-if st.button("Run Preprocessing"):
+    st.title("💙 Fitness Health Data — Pro Pipeline")
 
-df = st.session_state.df.copy()
+    # STEP 1
+    st.header("📂 Step 1 · Upload Dataset")
 
-df["Date"] = pd.to_datetime(df["Date"], errors="coerce", day
+    uploaded_file = st.file_uploader("Upload CSV File", type=["csv"])
 
-rst=True)
+    if uploaded_file:
 
-numeric_cols = [
-"Hours_Slept",
-"Water_Intake (Liters)",
-"Active_Minutes",
-"Heart_Rate (bpm)"
-]
+        df = pd.read_csv(uploaded_file)
+        st.session_state.df = df
 
-df[numeric_cols] = df.groupby("User_ID")[numeric_cols].transform(
-lambda x: x.interpolate(method="linear")
-)
+        rows, cols = df.shape
+        total_nulls = df.isnull().sum().sum()
 
-df[numeric_cols] = df.groupby("User_ID")[numeric_cols].transform(
-lambda x: x.
-ll().b
-ll()
+        c1,c2,c3 = st.columns(3)
 
-)
+        c1.metric("Rows", rows)
+        c2.metric("Columns", cols)
+        c3.metric("Total Nulls", total_nulls)
 
-df["Workout_Type"] = df["Workout_Type"].
+        st.success("Dataset Loaded Successfully!")
 
-llna("No Workout")
+    # STEP 2
+    if st.session_state.df is not None:
 
-st.session_state.cleaned_df = df
+        st.header("🔍 Step 2 · Check Null Values")
 
-st.success("Preprocessing Completed Successfully!")
+        df = st.session_state.df
 
-# ---------------- STEP 4 ----------------
-if st.session_state.cleaned_df is not None:
-st.header("👁 Step 4 · Preview Cleaned Data")
-df = st.session_state.cleaned_df
-st.write(f"Rows: {df.shape[0]} | Columns: {df.shape[1]}")
-st.dataframe(df.head(20))
+        null_counts = df.isnull().sum()
 
-# ---------------- STEP 5 ----------------
-if st.session_state.cleaned_df is not None:
-st.header("📊 Step 5 · EDA")
+        st.dataframe(null_counts)
 
-if st.button("Run EDA"):
+        st.subheader("📊 Missing Data Percentage")
 
-numeric_cols = [
-"Steps_Taken",
-"Calories_Burned",
-"Hours_Slept",
-"Active_Minutes",
-"Heart_Rate (bpm)",
-"Stress_Level (1
-10)"
+        null_percent = (null_counts/len(df))*100
 
-]
+        fig,ax = plt.subplots()
 
-g, axes = plt.subplots(3,2,
+        null_percent.sort_values(ascending=False).plot(kind="bar",ax=ax)
 
-gsize=(12,8))
+        ax.set_ylabel("Missing %")
 
-axes = axes.
+        st.pyplot(fig)
 
-atten()
+    # STEP 3
+    if st.session_state.df is not None:
 
-fori, col in enumerate(numeric_cols):
-sns.histplot(df[col], kde=True, ax=axes[i])
-axes[i].set_title(col)
+        st.header("⚙ Step 3 · Preprocess Data")
 
-plt.tight_layout()
-st.pyplot(
-g)
+        if st.button("Run Preprocessing"):
+
+            df = st.session_state.df.copy()
+
+            if "Date" in df.columns:
+                df["Date"] = pd.to_datetime(df["Date"],errors="coerce")
+
+            numeric_cols = [
+            "Hours_Slept",
+            "Water_Intake (Liters)",
+            "Active_Minutes",
+            "Heart_Rate (bpm)"
+            ]
+
+            numeric_cols = [c for c in numeric_cols if c in df.columns]
+
+            if "User_ID" in df.columns and numeric_cols:
+
+                df[numeric_cols] = df.groupby("User_ID")[numeric_cols].transform(
+                lambda x: x.interpolate()
+                )
+
+                df[numeric_cols] = df.groupby("User_ID")[numeric_cols].transform(
+                lambda x: x.ffill().bfill()
+                )
+
+            if "Workout_Type" in df.columns:
+                df["Workout_Type"] = df["Workout_Type"].fillna("No Workout")
+
+            st.session_state.cleaned_df = df
+
+            st.success("Preprocessing Completed")
+
+    # STEP 4
+    if st.session_state.cleaned_df is not None:
+
+        st.header("👁 Step 4 · Preview Cleaned Data")
+
+        df = st.session_state.cleaned_df
+
+        st.write(f"Rows: {df.shape[0]} | Columns: {df.shape[1]}")
+
+        st.dataframe(df.head(20))
+
+    # STEP 5
+    if st.session_state.cleaned_df is not None:
+
+        st.header("📊 Step 5 · EDA")
+
+        if st.button("Run EDA"):
+
+            df = st.session_state.cleaned_df
+
+            numeric_cols = [
+            "Steps_Taken",
+            "Calories_Burned",
+            "Hours_Slept",
+            "Active_Minutes",
+            "Heart_Rate (bpm)",
+            "Stress_Level (1-10)"
+            ]
+
+            numeric_cols=[c for c in numeric_cols if c in df.columns]
+
+            fig,axes = plt.subplots(3,2,figsize=(12,8))
+
+            axes = axes.flatten()
+
+            for i,col in enumerate(numeric_cols):
+
+                sns.histplot(df[col],kde=True,ax=axes[i])
+
+                axes[i].set_title(col)
+
+            plt.tight_layout()
+
+            st.pyplot(fig)
+
+

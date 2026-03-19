@@ -1,15 +1,21 @@
-# Ignore unnecessary folders
+# Ignore virtual environment
 venv/
-frontend/
+
+# Ignore Streamlit config folder (optional)
+.streamlit/
+
+# Ignore extra folder
 fitpulse/
 
-# Ignore system/cache files
+# Ignore unwanted python file
+python_basics.py
+
+# Ignore dataset file
+tsfresh_features.csv
+
+# Ignore cache files
 __pycache__/
 *.pyc
+
+# System files
 desktop.ini
-
-# Ignore datasets / large files
-*.csv
-
-# Ignore notebooks (optional)
-*.ipynb

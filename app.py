@@ -539,7 +539,7 @@ def milestone2():
         fig_comp = model_hr.plot_components(forecast_hr)
 
         # Resize to compact
-        fig_comp.set_size_inches(4,2.5)
+        fig_comp.set_size_inches(10,3)
 
         # Add title
         fig_comp.suptitle(
