@@ -1,0 +1,15 @@
+# Ignore unnecessary folders
+venv/
+frontend/
+fitpulse/
+
+# Ignore system/cache files
+__pycache__/
+*.pyc
+desktop.ini
+
+# Ignore datasets / large files
+*.csv
+
+# Ignore notebooks (optional)
+*.ipynb
